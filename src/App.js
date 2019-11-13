@@ -1,26 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Meme from './components/Meme';
+
+class App extends React.Component {
+  state = {
+    data: null,
+  };
+
+  componentDidMount() {
+    fetch("https://www.reddit.com/r/pewdiepie.json")
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          data: res.data,
+        });
+      });
+  }
+
+  render() {
+    const { data } = this.state;
+
+    return (
+      <div className="App">
+        <header className="App-header">
+          Reddit Web
+        </header>
+  
+        <div className="App-memes">
+          {data && data.children.map(child => (
+            <div className="App-meme">
+              <Meme data={child.data} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
